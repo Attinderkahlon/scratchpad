@@ -6,6 +6,10 @@ jobs:
     steps:
       - name: Say hello
         run: echo "Hello from a robot computer!"
+      - name: Pretend tests
+        run: |
+          echo "Running tests..."
+          exit 1
       - name: Show where we are
         run: |
           echo "Commit ID: $GITHUB_SHA"
