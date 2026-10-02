@@ -1,11 +1,21 @@
+# WORKFLOW: one automated process. GitHub runs every .yml file in .github/workflows
 name: Hello CI
+
+# TRIGGERS (events): what starts this workflow
 on:
+  # when commits land on main
   push:
     branches: [main]
+  # when a PR is opened or updated
   pull_request:
+
+# JOBS: each job gets its own fresh runner. Jobs run in parallel by default.
 jobs:
+  # Job ID "check". Your ruleset requires a check with this exact name.
   check:
+    # RUNNER: which kind of machine to borrow
     runs-on: ubuntu-latest
+    # STEPS: run in order, on the same machine
     steps:
       - name: Say hello
         run: echo "Hello from a robot computer!"
@@ -17,3 +27,22 @@ jobs:
         run: |
           echo "Commit ID: $GITHUB_SHA"
           echo "Branch: $GITHUB_REF_NAME"
+
+  # A second job, on a second, separate machine
+  inspect:
+    runs-on: ubuntu-latest
+    # needs: check
+    steps:
+      - name: Look around before checkout
+        run: |
+          echo "I am in: $(pwd)"
+          ls -la
+      # uses: = a ready-made action. This one downloads your code.
+      - name: Get the code
+        uses: actions/checkout@v7
+      - name: Look around after checkout
+        run: ls -la
+      - name: What tools does this machine have?
+        run: |
+          node --version
+          git --version
